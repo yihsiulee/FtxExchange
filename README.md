@@ -1,1 +1,6 @@
-# FtxExchange
+# Start
+
+```
+yarn install
+yarn start
+```
