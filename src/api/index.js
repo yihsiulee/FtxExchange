@@ -20,7 +20,10 @@ export const getMarkets = () => {
   return ftx_exchange.loadMarkets()
 }
 
+//獲取交易對數據
 export const getTicker = (symbol) => {
   if (!symbol) return
   return ftx_exchange.fetchTicker(symbol)
 }
+
+
