@@ -1,6 +1,6 @@
 import ccxt from 'ccxt'
 
-const ftx_exchange = new ccxt.binance({
+const ftx_exchange = new ccxt.ftx({
   timeout: 15000,
 })
 
@@ -14,4 +14,13 @@ export const getExchangeName = () => {
 
 export const getExchangeTime = () => {
   return ftx_exchange.iso8601(ftx_exchange.milliseconds())
+}
+
+export const getMarkets = () => {
+  return ftx_exchange.loadMarkets()
+}
+
+export const getTicker = (symbol) => {
+  if (!symbol) return
+  return ftx_exchange.fetchTicker(symbol)
 }
