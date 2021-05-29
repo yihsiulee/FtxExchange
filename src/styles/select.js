@@ -6,3 +6,15 @@ export const useSelectStyles = makeStyles((theme) => ({
     background: 'white',
   },
 }))
+
+export const useSlideStyles = makeStyles((theme) => ({
+  root: {
+    
+  },
+  width: 500,
+  margin: {
+    height: theme.spacing(3),
+  },
+}));
+
+

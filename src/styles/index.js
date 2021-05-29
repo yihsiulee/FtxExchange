@@ -1,3 +1,3 @@
 import { useSelectStyles } from './select'
-
-export { useSelectStyles }
+import { useSlideStyles } from './select'
+export { useSelectStyles, useSlideStyles }
