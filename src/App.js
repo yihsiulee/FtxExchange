@@ -43,7 +43,6 @@ function App() {
       <div className="w-1/2  justify-items-center rounded-xl p-4 space-y-2 m-auto bg-lightblue">
         <div className="flex items-center">
           <span className="text-white text-lg mr-5 font-bold">獲取時間:</span>
-          {console.log(ticker)}
           <span className="text-white">{moment(parseInt(ticker?.timestamp)).format('YYYY-MM-DD HH:mm:ss')}</span>
         </div>
 
