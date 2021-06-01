@@ -13,7 +13,9 @@ import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
 import _ from 'lodash'
 function App() {
+
   // console.log('user1:', REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET)
+
   const [markets, setMarkets] = useState({}) //市場上所有的幣別
   const [symbol, setSymbol] = useState('') // symbol代表幣別 e.g. ETH/BTC, LTC/BTC
   const [ticker, setTicker] = useState({})
@@ -78,9 +80,18 @@ function App() {
   useEffect(() => {
     const init = async () => {
       const marketsData = await getMarkets()
-      setMarkets(marketsData)
-      const accountData = await getAccount()
-      setAccount(accountData)
+
+      var filteredObject = Object.keys(marketsData).reduce(function(r, e) {
+        if (marketsData[e].id.slice(-4) == "PERP") r[e] = marketsData[e]
+        return r;
+      }, {})
+
+      setMarkets(filteredObject)
+
+//       setMarkets(marketsData)
+//       const accountData = await getAccount()
+//       setAccount(accountData)
+
     }
     init()
     setSlideValue(_.get(account,'result.leverage',1))
