@@ -1,6 +1,9 @@
 import ccxt from 'ccxt'
+import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from '../config'
 
 const ftx_exchange = new ccxt.ftx({
+  apiKey:REACT_APP_USER1_APIKEY,
+  secret:REACT_APP_USER1_SECRET,
   timeout: 15000,
 })
 
@@ -25,5 +28,16 @@ export const getTicker = (symbol) => {
   if (!symbol) return
   return ftx_exchange.fetchTicker(symbol)
 }
+
+//查詢餘額
+export const getBalance = () => {
+  return ftx_exchange.fetchBalance()
+}
+
+export const getAccount = () => {
+  return ftx_exchange.account()
+}
+
+
 
 

@@ -8,13 +8,14 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import moment from 'moment'
 import Open from './components/open'
 import Close from './components/close'
+import User from './components/user'
+
 
 function App() {
   console.log('user1:', REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET)
   const [markets, setMarkets] = useState({}) //市場上所有的幣別
   const [symbol, setSymbol] = useState('') // symbol代表幣別 e.g. ETH/BTC, LTC/BTC
   const [ticker, setTicker] = useState({})
-
   // 初始化拿到市場資料
   useEffect(() => {
     const init = async () => {
@@ -33,17 +34,22 @@ function App() {
     getTickerData()
   }, [symbol])
 
+  
+  
   //選幣別時,把選項存起來,底線是他會傳兩個參數,可是只用的到第二個,第一格就可以放底線
   const handleChangeSymbol = (_, value) => {
     setSymbol(value?.id)
   }
 
   return (
+    
     <div className="h-screen w-screen flex  bg-darkblue">
       <div className="w-1/2  justify-items-center rounded-xl p-4 space-y-2 m-auto bg-lightblue">
         <div className="flex items-center">
           <span className="text-white text-lg mr-5 font-bold">獲取時間:</span>
           <span className="text-white">{moment(parseInt(ticker?.timestamp)).format('YYYY-MM-DD HH:mm:ss')}</span>
+ 
+        
         </div>
 
         <div className="flex items-center">
@@ -71,6 +77,9 @@ function App() {
 
         {/* 平倉參數 */}
         <Close />
+
+        {/* user顯示 */}
+        <User />
       </div>
     </div>
   )
