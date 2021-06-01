@@ -5,6 +5,7 @@ const ftx_exchange = new ccxt.ftx({
   apiKey:REACT_APP_USER1_APIKEY,
   secret:REACT_APP_USER1_SECRET,
   timeout: 15000,
+  'enableRateLimit': true,
 })
 
 
@@ -45,6 +46,7 @@ export const getPosition = () => {
   return  ftx_exchange.fetch_positions()
 }
 
+//取得帳戶資訊,裡面有很多資料
 export const getAccount = () => {
   return ftx_exchange.private_get_account()
 }

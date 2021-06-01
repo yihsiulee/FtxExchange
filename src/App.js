@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
 import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from './config'
-import { getMarkets, getTicker, getAccount } from './api'
+import { getMarkets, getTicker, getAccount, changeLeverage } from './api'
 import { useSelectStyles } from './styles'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -17,16 +17,57 @@ function App() {
   const [markets, setMarkets] = useState({}) //市場上所有的幣別
   const [symbol, setSymbol] = useState('') // symbol代表幣別 e.g. ETH/BTC, LTC/BTC
   const [ticker, setTicker] = useState({})
-  const [slideValue, setSlideValue] = useState(10)
+  const [slideValue, setSlideValue] = useState(1)
   const [account, setAccount] = useState({})
+  // const leverageGetValue = {
+  //   1:1,
+  //   3:2,
+  //   5:3,
+  //   10:4,
+  //   20:5,
+  //   50:6,
+  //   100:7,
+  //   101:8
+  //  }
+  // const leveragePostValue = {
+  //    1:1,
+  //    2:3,
+  //    3:5,
+  //    4:10,
+  //    5:20,
+  //    6:50,
+  //    7:100,
+  //    8:101
+  //   }
+  
   const leverageMarks = [
     {
       value: 1,
       label: '1x',
     },
     {
+      value: 3,
+      label: '3x',
+    },
+    {
+      value: 5,
+      label: '5x',
+    },
+    {
+      value: 10,
+      label: '10x',
+    },
+    {
+      value: 20,
+      label: '20x',
+    },
+    {
       value: 50,
       label: '50x',
+    },
+    {
+      value: 100,
+      label: '100x',
     },
     {
       value: 101,
@@ -42,7 +83,8 @@ function App() {
       setAccount(accountData)
     }
     init()
-    // setSlideValue(_.get(account,'result.leverage',3))
+    setSlideValue(_.get(account,'result.leverage',1))
+    
   }, [])
 
   // 當幣別改變時,拿幣的ticker
@@ -54,9 +96,18 @@ function App() {
     getTickerData()
   }, [symbol])
 
+  //更新槓桿倍率
+  useEffect(() => {
+    let leverage = _.get(account, 'result.leverage', 3)
+    setSlideValue(parseInt(leverage))
+  }, [account])
+
   //調整槓桿倍率
   const handleChangeSlide = (event, newValue) => {
     setSlideValue(newValue)
+    // 此comment勿刪除 之後會要用
+    // changeLeverage(newValue)
+
   }
 
   //選幣別時,把選項存起來,底線是他會傳兩個參數,可是只用的到第二個,第一格就可以放底線
@@ -98,15 +149,16 @@ function App() {
               <Typography id="discrete-slider-custom">{`leverage: ${slideValue}x`}</Typography>
             </div>
             <div>
-              {/* {console.log('L:', _.get(account, 'result.leverage', 3), 'X;', slideValue)} */}
               <Slider
-                style={{ width: 300 }}
+                style={{ width: 400 }}
                 value={slideValue}
                 onChange={handleChangeSlide}
                 aria-labelledby="discrete-slider-custom"
-                step={1}
+                step={null}
                 valueLabelDisplay="auto"
                 marks={leverageMarks}
+                min={1}
+                max={101}
               />
             </div>
           </span>
