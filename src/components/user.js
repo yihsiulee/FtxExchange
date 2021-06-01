@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { getBalance, getAccount } from '../api'
+import { getBalance, getPosition, getAllImplicitApiMethods } from '../api'
 import _ from 'lodash'
 
 const User = () => {
   const [balance, setBalance] = useState()
-  const [account, setAccount] = useState()
+  const [position, setPosition] = useState()
 
   useEffect(() => {
     const getBalanceData = async () => {
@@ -15,11 +15,11 @@ const User = () => {
   }, [])
 
   useEffect(() => {
-    const getAccountData = async () => {
-      const accountData = await getAccount()
-      setAccount(accountData)
+    const getPositionData = async () => {
+      const positionData = await getPosition()
+      setPosition(positionData)
     }
-    getAccountData()
+    getPositionData()
   }, [])
 
   return (
@@ -29,7 +29,8 @@ const User = () => {
       </div>
 
       <div className="flex items-center">
-        <span className="text-white text-lg mr-5 font-bold">測試用餘額:{_.get(balance, 'USD.free', 0)}</span>
+        <span className="text-white text-lg mr-5 font-bold">測試用,餘額:{_.get(balance, 'USD.free', 0)},position:{_.get(position, '[0].future', 0)}</span>
+        {getAllImplicitApiMethods()}
       </div>
 
       <div className="flex items-center">

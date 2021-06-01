@@ -7,6 +7,12 @@ const ftx_exchange = new ccxt.ftx({
   timeout: 15000,
 })
 
+
+// log出來的function可以直接call 如底下getPosition
+export const getAllImplicitApiMethods = () =>{
+  return console.log (ftx_exchange)
+}
+
 export const getExchageId = () => {
   return ftx_exchange.id
 }
@@ -34,10 +40,21 @@ export const getBalance = () => {
   return ftx_exchange.fetchBalance()
 }
 
-export const getAccount = () => {
-  return ftx_exchange.account()
+//查詢現在合約倉位資訊
+export const getPosition = () => {
+  return  ftx_exchange.fetch_positions()
 }
 
+export const getAccount = () => {
+  return ftx_exchange.private_get_account()
+}
+
+//改變槓桿值
+export const changeLeverage = (userLeverage) => {
+  ftx_exchange.private_post_account_leverage({
+    'leverage': userLeverage,
+  })
+}
 
 
 
