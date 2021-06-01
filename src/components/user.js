@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { getBalance, getAccount } from '../api'
+import { getBalance, getPosition, getAllImplicitApiMethods, getAccount} from '../api'
 import _ from 'lodash'
 
 const User = () => {
   const [balance, setBalance] = useState()
-  const [account, setAccount] = useState()
-
+  const [position, setPosition] = useState()
+  const [account, setAccount] = useState({})
   useEffect(() => {
     const getBalanceData = async () => {
       const balanceData = await getBalance()
       setBalance(balanceData)
     }
     getBalanceData()
+  }, [])
+
+  useEffect(() => {
+    const getPositionData = async () => {
+      const positionData = await getPosition()
+      setPosition(positionData)
+    }
+    getPositionData()
   }, [])
 
   useEffect(() => {
@@ -29,11 +37,13 @@ const User = () => {
       </div>
 
       <div className="flex items-center">
-        <span className="text-white text-lg mr-5 font-bold">測試用餘額:{_.get(balance, 'USD.free', 0)}</span>
+        <span className="text-white text-lg mr-5 font-bold">測試用,餘額:{_.get(balance, 'USD.free', 0)},position:{_.get(position, '[1].future', 0)}</span>
+        {getAllImplicitApiMethods()}
       </div>
 
       <div className="flex items-center">
-        <span className="text-white text-lg mr-5 font-bold">帳號名稱:</span>
+        <span className="text-white text-lg mr-5 font-bold">帳號名稱:{_.get(account, 'result.username', 0)}</span>
+        {console.log(account)}
       </div>
 
       <div className="flex items-center">
