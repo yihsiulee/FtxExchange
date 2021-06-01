@@ -87,10 +87,9 @@ function App() {
       }, {})
 
       setMarkets(filteredObject)
-
-//       setMarkets(marketsData)
-//       const accountData = await getAccount()
-//       setAccount(accountData)
+//    setMarkets(marketsData)
+      const accountData = await getAccount()
+      setAccount(accountData)
 
     }
     init()
