@@ -108,7 +108,7 @@ function App() {
 
   //更新槓桿倍率
   useEffect(() => {
-    let leverage = _.get(account, 'result.leverage', 3)
+    let leverage = _.get(account, 'result.leverage', 1)
     setSlideValue(parseInt(leverage))
   }, [account])
 
@@ -161,7 +161,7 @@ function App() {
             <div>
               <Slider
                 style={{ width: 400 }}
-                value={slideValue}
+                value={slideValue}                
                 onChange={handleChangeSlide}
                 aria-labelledby="discrete-slider-custom"
                 step={null}
@@ -170,6 +170,7 @@ function App() {
                 min={1}
                 max={101}
               />
+              {console.log(slideValue)}
             </div>
           </span>
         </div>
