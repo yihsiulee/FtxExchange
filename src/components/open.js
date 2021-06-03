@@ -117,7 +117,6 @@ const Open = () => {
       </div>
 
       <div className="flex items-center">
-        {/* TODO: 發送交易request給ftx */}
         <Button onClick={handleButtonClick} size="small" variant="contained" color="primary">
           confirm
         </Button>
