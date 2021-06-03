@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './App.css'
-import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from './config'
+// import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from './config'
 import { getMarkets, getTicker, getAccount, changeLeverage } from './api'
 import { useSelectStyles } from './styles'
 import TextField from '@material-ui/core/TextField'
@@ -82,7 +82,7 @@ function App() {
       const marketsData = await getMarkets()
 
       var filteredObject = Object.keys(marketsData).reduce(function(r, e) {
-        if (marketsData[e].id.slice(-4) == "PERP") r[e] = marketsData[e]
+        if (marketsData[e].id.slice(-4) === "PERP") r[e] = marketsData[e]
         return r;
       }, {})
 
@@ -170,7 +170,7 @@ function App() {
                 min={1}
                 max={101}
               />
-              {console.log(slideValue)}
+              {/* {console.log(slideValue)} */}
             </div>
           </span>
         </div>
