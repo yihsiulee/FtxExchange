@@ -7,7 +7,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { getAccount } from '../api'
+import { getAccount, marketOrder} from '../api'
 import _ from 'lodash'
 import { GlobalContext } from '../context'
 
@@ -16,9 +16,11 @@ const Open = () => {
   const [inputValue, setInpuValue] = useState('')
   const [account, setAccount] = useState({})
   const [freeCollateral, setFreeCollateral] = useState(0)
-  const [slideValue, setSlideValue] = useState(1)
+  const [leverage, setLeverage] = useState(1)
   const [amount, setAmount] = useState(0)
   const [global, setGlobal] = useContext(GlobalContext)
+  const [price, setPrice] = useState(0)
+  const [symbol, setSymbol] = useState('')
   console.log('open global:', global)
 
   useEffect(() => {
@@ -37,9 +39,12 @@ const Open = () => {
 
   //取得槓桿
   useEffect(() => {
-    let leverage = _.get(account, 'result.leverage', 1)
-    setSlideValue(parseInt(leverage))
-  }, [account])
+    setLeverage(global.leverage)
+    setPrice(global.price)
+    setSymbol(global.symbol)
+    // let leverage = _.get(account, 'result.leverage', 1)
+    // setSlideValue(parseInt(leverage))
+  }, [global])
 
   const handleChangeSelect = (event) => {
     setSelectedValue(event.target.value)
@@ -50,16 +55,18 @@ const Open = () => {
 
   //(可用保證金*槓桿 )/ 現在的幣價  = 最大可開的數量，最大可開數量 乘上 你要的開倉輸入的%數 就是開倉數量(amount)
   const countAmount = () => {
-    //拿槓桿和
-    let num = ((freeCollateral * slideValue) / '現在的幣價') * (inputValue / 100)
+    //拿計算後和
+    let num = ((freeCollateral * leverage) / price) * (inputValue / 100)
     setAmount(num)
   }
 
   const handleButtonClick = () => {
+    //以下註解 console勿刪
     console.log('多空:', selectedValue, '幾趴:', inputValue / 100)
-    console.log(account)
-    // marketOrder(symbol, selectedValue, amount)
-    // marketOrder("BTC-PERP", selectedValue, 0.001)
+    // console.log(account)
+    console.log(freeCollateral)
+    console.log(Math.floor(((freeCollateral * leverage) / price) * (inputValue / 100)*10000)/10000)
+    // marketOrder(symbol, selectedValue, Math.floor(((freeCollateral * leverage) / price) * (inputValue / 100)*10000)/10000)
   }
 
   return (

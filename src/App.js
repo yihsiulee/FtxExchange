@@ -21,6 +21,7 @@ function App() {
   const [slideValue, setSlideValue] = useState(1)
   const [account, setAccount] = useState({})
   const [global, setGlobal] = useContext(GlobalContext)
+  const [price, setPrice] = useState(0)
   console.log('global:', global)
 
   const leverageMarks = [
@@ -75,7 +76,7 @@ function App() {
     init()
   }, [])
 
-  // 當幣別改變時,拿幣的ticker
+  // 當幣別symbol改變時,拿幣的ticker
   useEffect(() => {
     const getTickerData = async () => {
       const tickerData = await getTicker(symbol)
@@ -87,10 +88,21 @@ function App() {
     getTickerData()
   }, [symbol])
 
+  //  更新幣價
+  useEffect(() => {
+    setPrice(ticker?.last)
+    setGlobal((prev) => {
+      return { ...prev, price: ticker?.last }
+    })
+  }, [ticker])
+
   //更新槓桿倍率
   useEffect(() => {
     let leverage = _.get(account, 'result.leverage', 1)
     setSlideValue(parseInt(leverage))
+    setGlobal((prev) => {
+      return { ...prev, leverage: parseInt(leverage) }
+    })
   }, [account])
 
   //調整槓桿倍率
@@ -132,7 +144,7 @@ function App() {
 
         <div className="flex items-center">
           <span className="text-white text-lg mr-5 font-bold">幣價:</span>
-          <span className="text-white">{ticker?.last}</span>
+          <span className="text-white">{price}</span>
         </div>
 
         <div className="flex items-center">
