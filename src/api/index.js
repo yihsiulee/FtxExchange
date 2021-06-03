@@ -2,16 +2,15 @@ import ccxt from 'ccxt'
 import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from '../config'
 
 const ftx_exchange = new ccxt.ftx({
-  apiKey:REACT_APP_USER1_APIKEY,
-  secret:REACT_APP_USER1_SECRET,
+  apiKey: REACT_APP_USER1_APIKEY,
+  secret: REACT_APP_USER1_SECRET,
   timeout: 15000,
-  'enableRateLimit': true,
+  enableRateLimit: true,
 })
 
-
 // log出來的function可以直接call 如底下getPosition
-export const getAllImplicitApiMethods = () =>{
-  return console.log (ftx_exchange)
+export const getAllImplicitApiMethods = () => {
+  return //console.log (ftx_exchange)
 }
 
 export const getExchageId = () => {
@@ -43,7 +42,7 @@ export const getBalance = () => {
 
 //查詢現在合約倉位資訊
 export const getPosition = () => {
-  return  ftx_exchange.fetch_positions()
+  return ftx_exchange.fetch_positions()
 }
 
 //取得帳戶資訊,裡面有很多資料
@@ -54,9 +53,13 @@ export const getAccount = () => {
 //改變槓桿值
 export const changeLeverage = (userLeverage) => {
   ftx_exchange.private_post_account_leverage({
-    'leverage': userLeverage,
+    leverage: userLeverage,
   })
 }
 
-
-
+//市價買賣單
+//amount 開的數量
+//(保證金*槓桿 )/ 現在的幣價  = 最大可開的數量，最大可開數量 乘上 你要的開倉輸入的%數 就是開倉數量(amount)
+export const marketOrder = (symbol, side, amount) => {
+  ftx_exchange.createOrder(symbol, 'market', side, amount)
+}

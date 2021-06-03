@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './App.css'
-import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from './config'
-import { getMarkets, getTicker, getAccount, changeLeverage } from './api'
+// import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from './config'
+import { getMarkets, getTicker, getAccount } from './api'
 import { useSelectStyles } from './styles'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
@@ -12,36 +12,18 @@ import User from './components/user'
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
 import _ from 'lodash'
+import { GlobalContext } from './context'
+
 function App() {
-
-  // console.log('user1:', REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET)
-
   const [markets, setMarkets] = useState({}) //市場上所有的幣別
   const [symbol, setSymbol] = useState('') // symbol代表幣別 e.g. ETH/BTC, LTC/BTC
   const [ticker, setTicker] = useState({})
   const [slideValue, setSlideValue] = useState(1)
   const [account, setAccount] = useState({})
-  // const leverageGetValue = {
-  //   1:1,
-  //   3:2,
-  //   5:3,
-  //   10:4,
-  //   20:5,
-  //   50:6,
-  //   100:7,
-  //   101:8
-  //  }
-  // const leveragePostValue = {
-  //    1:1,
-  //    2:3,
-  //    3:5,
-  //    4:10,
-  //    5:20,
-  //    6:50,
-  //    7:100,
-  //    8:101
-  //   }
-  
+  const [global, setGlobal] = useContext(GlobalContext)
+  const [price, setPrice] = useState(0)
+  console.log('global:', global)
+
   const leverageMarks = [
     {
       value: 1,
@@ -81,43 +63,56 @@ function App() {
     const init = async () => {
       const marketsData = await getMarkets()
 
-      var filteredObject = Object.keys(marketsData).reduce(function(r, e) {
-        if (marketsData[e].id.slice(-4) == "PERP") r[e] = marketsData[e]
-        return r;
+      var filteredObject = Object.keys(marketsData).reduce(function (r, e) {
+        if (marketsData[e].id.slice(-4) === 'PERP') r[e] = marketsData[e]
+        return r
       }, {})
 
       setMarkets(filteredObject)
-//    setMarkets(marketsData)
+      //    setMarkets(marketsData)
       const accountData = await getAccount()
       setAccount(accountData)
-
     }
     init()
-    setSlideValue(_.get(account,'result.leverage',1))
-    
   }, [])
 
-  // 當幣別改變時,拿幣的ticker
+  // 當幣別symbol改變時,拿幣的ticker
   useEffect(() => {
     const getTickerData = async () => {
       const tickerData = await getTicker(symbol)
+      setGlobal((prev) => {
+        return { ...prev, symbol }
+      })
       setTicker(tickerData)
     }
     getTickerData()
   }, [symbol])
 
+  //  更新幣價
+  useEffect(() => {
+    setPrice(ticker?.last)
+    setGlobal((prev) => {
+      return { ...prev, price: ticker?.last }
+    })
+  }, [ticker])
+
   //更新槓桿倍率
   useEffect(() => {
     let leverage = _.get(account, 'result.leverage', 1)
     setSlideValue(parseInt(leverage))
+    setGlobal((prev) => {
+      return { ...prev, leverage: parseInt(leverage) }
+    })
   }, [account])
 
   //調整槓桿倍率
   const handleChangeSlide = (event, newValue) => {
     setSlideValue(newValue)
+    setGlobal((prev) => {
+      return { ...prev, leverage: newValue }
+    })
     // 此comment勿刪除 之後會要用
     // changeLeverage(newValue)
-
   }
 
   //選幣別時,把選項存起來,底線是他會傳兩個參數,可是只用的到第二個,第一格就可以放底線
@@ -149,7 +144,7 @@ function App() {
 
         <div className="flex items-center">
           <span className="text-white text-lg mr-5 font-bold">幣價:</span>
-          <span className="text-white">{ticker?.last}</span>
+          <span className="text-white">{price}</span>
         </div>
 
         <div className="flex items-center">
@@ -161,7 +156,7 @@ function App() {
             <div>
               <Slider
                 style={{ width: 400 }}
-                value={slideValue}                
+                value={slideValue}
                 onChange={handleChangeSlide}
                 aria-labelledby="discrete-slider-custom"
                 step={null}
@@ -170,7 +165,6 @@ function App() {
                 min={1}
                 max={101}
               />
-              {console.log(slideValue)}
             </div>
           </span>
         </div>
