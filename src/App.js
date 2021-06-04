@@ -22,7 +22,7 @@ function App() {
   const [account, setAccount] = useState({})
   const [global, setGlobal] = useContext(GlobalContext)
   const [price, setPrice] = useState(0)
-  console.log('global:', global)
+  // console.log('global:', global)
 
   const leverageMarks = [
     {
