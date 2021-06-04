@@ -21,7 +21,7 @@ const Open = () => {
   const [global, setGlobal] = useContext(GlobalContext)
   const [price, setPrice] = useState(0)
   const [symbol, setSymbol] = useState('')
-  console.log('open global:', global)
+  // console.log('open global:', global)
 
   useEffect(() => {
     const getAccountData = async () => {

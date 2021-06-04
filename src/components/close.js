@@ -1,9 +1,53 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Button from '@material-ui/core/Button'
+import { GlobalContext } from '../context'
 import { InputTextField } from '../styles'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import { marketOrder } from '../api'
+import _ from 'lodash'
 
 const Close = () => {
+  const [global, setGlobal] = useContext(GlobalContext)
+  const [position, setPosition] =useState()
+  const [symbol, setSymbol] =useState()
+  const [reverseSide, setReverseSide] =useState()
+  const [amount, setAmount] =useState()
+  const [inputValue, setInpuValue] = useState()
+
+  console.log('close global:', global)
+
+  //初始化拿position
+  useEffect(()=>{
+      setPosition(_.get(global,"positionData",0))
+      
+  },[global])
+
+
+
+  const sellAll = ()=>{
+    
+    position.filter(item=>item.size>0).map(newPosition=>{
+      console.log(newPosition.future,"old",newPosition.side,newPosition.size)
+      let reverseSide=newPosition.side
+      if (reverseSide=="buy"){
+        reverseSide="sell"
+      }
+      if (reverseSide.side=="sell"){
+        reverseSide="buy"
+      }
+      console.log(newPosition.future,"new",reverseSide,(newPosition.size*inputValue/100))
+      // 此行勿刪
+      // marketOrder(newPosition.future, reverseSide, (newPosition.size*inputValue/100))
+      
+    })
+  }
+
+  const handleChangeInput = (event) => {
+    setInpuValue(event.target.value)
+  }
+
+
+
   return (
     <div className="space-y-4">
       <div className="flex items-center">
@@ -71,6 +115,7 @@ const Close = () => {
             variant="outlined"
             color="primary"
             size="small"
+            onChange={handleChangeInput}
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
@@ -78,9 +123,7 @@ const Close = () => {
       </div>
           <div className="flex items-center">
             <Button
-              onClick={() => {
-                alert('comfirm 平倉參數')
-              }}
+              onClick={sellAll}
               size="small"
               variant="contained"
               color="primary"
