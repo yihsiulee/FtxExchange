@@ -1,4 +1,5 @@
 import { useSelectStyles } from './select'
 import { useSlideStyles } from './select'
 import { InputTextField } from './input'
-export { useSelectStyles, useSlideStyles, InputTextField }
+import { StyledTableCell } from './table'
+export { useSelectStyles, useSlideStyles, InputTextField, StyledTableCell }

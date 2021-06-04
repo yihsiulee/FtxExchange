@@ -9,6 +9,7 @@ import moment from 'moment'
 import Open from './components/open'
 import Close from './components/close'
 import User from './components/user'
+import UserInfo from './components/userInfo'
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
 import _ from 'lodash'
@@ -177,6 +178,9 @@ function App() {
 
         {/* user顯示 */}
         <User />
+
+
+        <UserInfo/>
       </div>
     </div>
   )
