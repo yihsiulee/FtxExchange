@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { getBalance, getPosition, getAllImplicitApiMethods, getAccount } from '../api'
+import { GlobalContext } from '../context'
 import _ from 'lodash'
 
 const User = () => {
   const [balance, setBalance] = useState()
   const [position, setPosition] = useState()
   const [account, setAccount] = useState({})
+  const [, setGlobal] = useContext(GlobalContext)
+
   useEffect(() => {
     const getBalanceData = async () => {
       const balanceData = await getBalance()
@@ -18,9 +21,12 @@ const User = () => {
     const getPositionData = async () => {
       const positionData = await getPosition()
       setPosition(positionData)
+      setGlobal((prev) => {
+        return { ...prev, positionData }
+      })
     }
     getPositionData()
-  }, [])
+  }, [setGlobal])
 
   useEffect(() => {
     const getAccountData = async () => {
