@@ -1,4 +1,5 @@
 import ccxt from 'ccxt'
+import CryptoJS from 'crypto-js'
 import { REACT_APP_USER1_APIKEY, REACT_APP_USER1_SECRET } from '../config'
 
 const ftx_exchange = new ccxt.ftx({
@@ -7,6 +8,9 @@ const ftx_exchange = new ccxt.ftx({
   timeout: 15000,
   enableRateLimit: true,
 })
+
+
+
 
 // log出來的function可以直接call 如底下getPosition
 export const getAllImplicitApiMethods = () => {
@@ -62,4 +66,30 @@ export const changeLeverage = (userLeverage) => {
 //(保證金*槓桿 )/ 現在的幣價  = 最大可開的數量，最大可開數量 乘上 你要的開倉輸入的%數 就是開倉數量(amount)
 export const marketOrder = (symbol, side, amount) => {
   ftx_exchange.createOrder(symbol, 'market', side, amount)
+}
+
+//取交易
+export const getMyTrades = () => {
+  return ftx_exchange.fetch_my_trades()
+}
+export const getMyProfitData = async (method, endPoint) => {
+  const HOST_NAME = "https://ftx.com"
+  const FTX_TS = new Date().getTime()
+  // example 1622872674069 + 'GET' + '/api/pnl/historical_changes'
+  var payload = FTX_TS + method.toUpperCase() + endPoint
+  const FTX_SIGN = CryptoJS.HmacSHA256(payload, REACT_APP_USER1_SECRET).toString(CryptoJS.enc['Hex'])
+  const FTX_KEY = REACT_APP_USER1_APIKEY
+  var url = HOST_NAME + endPoint
+  const result = await fetch(url, {
+    headers: {
+      "FTX-TS": FTX_TS,
+      "FTX-SIGN": FTX_SIGN,
+      "FTX-KEY": FTX_KEY
+    },
+    method: method
+  }).then(response => response.json())
+    .catch(function (error) {
+      console.log(error)
+    })
+  return result
 }
